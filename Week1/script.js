@@ -8,7 +8,6 @@ const students = [
 ]
 
 // 1. Scope: var, let, const
-
 function scopeDemo() {
     {
         var x = 5;
@@ -28,3 +27,55 @@ function scopeDemo() {
     // console.log('outside block:', z);
 }
 scopeDemo();
+
+// 2. ARROW FUNCTION
+const addNumbers = (a, b) => a + b;
+console.log("Arrow function result:", addNumbers(5, 7));
+
+// 3. ARRAYS (forEach, map, filter, reduce)
+
+// forEach
+console.log("Student Names and Score:");
+students.forEach(
+    student => console.log(`${student.name}: ${student.score}`)
+);
+
+// map
+const scores = students.map(student => student.score);
+console.log("Mapped Scores:", scores);
+
+// filter 
+const passedStudents = students.filter(student => student.score >= 50);
+console.log("Filtered (Passed Students):", passedStudents);
+
+
+// reduce
+const totalScore = students.reduce((total, student) => total + student.score, 0);
+console.log("Total Score:", totalScore);
+
+
+ // 4. OBJECTS & DESTRUCTURING
+let school = {
+    name: "Flexisaf Edu",
+    location: "Hybrid",
+    studentsCount: students.length
+};
+
+let { name: schoolName, location: schoolLocation } = school;
+console.log("School Name:", schoolName);
+console.log("School Location:", schoolLocation);
+
+
+
+ // 5. HTML PAGE ARRAY IMPLEMENTATION
+
+const displayStudents = () => {
+    const list = document.getElementById("studentList");
+    list.innerHTML = "";
+
+    passedStudents.forEach(({ name, score }) => {
+        const li = document.createElement("li");
+        li.textContent = `${name} - Score: ${score}`;
+        list.appendChild(li);
+    });
+};

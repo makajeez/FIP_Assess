@@ -1,6 +1,6 @@
 // Data to be used.
 const students = [
-    { name: "Asha", score: 85 },
+    { name: "Aisha", score: 85 },
     { name: "David", score: 42 },
     { name: "Musa", score: 67 },
     { name: "Zainab", score: 90 },
@@ -68,14 +68,22 @@ console.log("School Location:", schoolLocation);
 
 
  // 5. HTML PAGE ARRAY IMPLEMENTATION
-
 const displayStudents = () => {
-    const list = document.getElementById("studentList");
-    list.innerHTML = "";
-
-    passedStudents.forEach(({ name, score }) => {
-        const li = document.createElement("li");
-        li.textContent = `${name} - Score: ${score}`;
-        list.appendChild(li);
-    });
-};
+    const table = document.getElementById("table");
+    table.classList.remove("d-none");
+    
+    if(!table.classList.contains("filled")){
+        students.forEach(({ name, score }) => {
+            const tbody = document.getElementById("table-body");
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td>${name}</td>
+            <td>${score}</td>`;
+            
+            tbody.appendChild(row);
+           
+        })
+    }
+    table.classList.add("filled");
+    console.log("Table Data Filled");
+}

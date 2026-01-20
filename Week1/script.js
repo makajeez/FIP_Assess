@@ -84,6 +84,6 @@ const displayStudents = () => {
            
         })
     }
-    table.classList.add("filled");
+    document.getElementById("button").style.display = "none";
     console.log("Table Data Filled");
 }

@@ -1,0 +1,44 @@
+:root {
+  --bg-color: #0f172a;
+  --card-bg: #020617;
+  --text-color: #595e63;
+  --muted-text: #94a3b8;
+  --accent: #97ef44;
+}
+
+.light {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #020617;
+  --muted-text: #475569;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.movie-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}

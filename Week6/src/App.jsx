@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const Env = {
     apiId: '6597b9a018bdf6b554c5fdd8',
@@ -57,21 +57,23 @@ function Nav() {
 }
 
 function Card() {
-const [postData, setPostData] = useState(null);
+const [postData, setPostData] = useState([]);
 
-useEffect(() => {
-    fetch(`${Env.baseUrl}post?limit=10`, {
-        headers: {
-            'app-id': Env.apiId
-        }
-    })
-    .then(res => {
-        res.json()
-        console.log(res.json())
-    })
-    .then(data => setPostData(data.data))
-    .catch(err => console.error(err));
-}, []);
+const getData = async() => {
+    try {
+        const response = await fetch(`${Env.baseUrl}post?limit=10`, {
+            headers: {
+                'app-id': Env.apiId
+            }
+        });
+        const data = await response.json();
+        setPostData(data.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
+getData();
+  
 
   return (
   <div>
@@ -81,12 +83,12 @@ useEffect(() => {
               <button data-modal-target="addPost" data-modal-toggle="addPost" type="button" className="flex justify-center items-center w-13 h-13 text-white hover:text-gray-500 bg-gray-500 rounded-full border border-indigo-900 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
                   <span className="material-symbols-outlined">add</span>
               </button>
-              <span className="tooltiptext">Add Post</span>
+              {/* <span className="tooltiptext">Add Post</span> */}
           </div>      
       </div>
 
       <hr className="my-10" />
-
+        { postData.length > 0 ? (
       <div className="sm:grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-10">
           {postData.map((post) => {
                 return (
@@ -104,14 +106,14 @@ useEffect(() => {
                                       edit
                                   </span>
                               </button>
-                              <span className="tooltiptext">edit</span>
+                              {/* <span className="tooltiptext">edit</span> */}
                           </div>
                           <div id="speed-dial-menu-horizontal" className="tooltip items-center me-4 space-x2 ltr:space-x-reverse">
                               <button data-modal-target="deletePost" data-modal-toggle="deletePost"  type="button" className="tooltip relative inline-flex items-center p-1 text-sm text-center">
                                   <span className="material-symbols-outlined">
                                       delete
                                   </span>
-                                  <span className="tooltiptext">delete post</span>
+                                  {/* <span className="tooltiptext">delete post</span> */}
                               </button>
                           </div>                    
                       </div>
@@ -141,8 +143,12 @@ useEffect(() => {
                   </div>
                 </div>
                 )}
-)}
-    </div>
+            )}
+      </div> ) : (
+        <div className="flex items-center justify-center">
+            <p className="text-sm text-gray-700 dark:text-gray-400">No posts found</p>
+        </div>
+        )}
 
     {/* <hr className="my-10" /> */}
     

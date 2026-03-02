@@ -211,6 +211,8 @@ function Card() {
             </div>
 
             <hr className="my-10" />
+
+            {/* Pagination */}
             <div className="flex flex-col items-center">
               <span className="text-sm text-gray-700 dark:text-gray-400">
                 Showing{" "}

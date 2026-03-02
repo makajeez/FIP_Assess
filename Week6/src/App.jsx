@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Nav } from "./Nav";
+import { ImageGallery } from "./ImageGallery";
 
 
 const ENV = {
@@ -7,30 +8,8 @@ const ENV = {
   baseUrl: "https://dummyapi.io/data/v1/",
 };
 
-const GALLERY_IMAGES = [
-  "image.jpg", "image-1.jpg", "image-2.jpg", "image-3.jpg",
-  "image-4.jpg", "image-5.jpg", "image-6.jpg", "image-7.jpg",
-  "image-8.jpg", "image-9.jpg", "image-10.jpg", "image-11.jpg",
-].map((name) => `https://flowbite.s3.amazonaws.com/docs/gallery/square/${name}`);
 
 
-function ImageGallery({ onSelect, selectedImage }) {
-  return (
-    <div className="grid grid-cols-4 gap-4 mb-4">
-      {GALLERY_IMAGES.map((src) => (
-        <div
-          key={src}
-          onClick={() => onSelect(src)}
-          className={`cursor-pointer rounded-lg border-2 transition-all ${
-            selectedImage === src ? "border-blue-500" : "border-transparent"
-          }`}
-        >
-          <img className="h-auto max-w-full rounded-lg" src={src} alt="Gallery option" />
-        </div>
-      ))}
-    </div>
-  );
-}
 
 function PostCard({ post, onEdit, onDelete }) {
   return (
@@ -49,7 +28,15 @@ function PostCard({ post, onEdit, onDelete }) {
             </span>
             <br />
             <span className="text-sm font-light">
-              <strong>Posted:</strong> {new Date(post.publishDate).toLocaleDateString()}
+                { post.publishDate === post.updatedDate? (
+                     <span>
+                        <strong>Posted:</strong> {new Date(post.publishDate).toLocaleDateString()}
+                    </span>
+                ) : (
+                    <span>
+                        <strong>Updated:</strong> {new Date(post.updatedDate).toLocaleDateString()}
+                    </span>
+                )}
             </span>
           </div>
 
@@ -86,7 +73,7 @@ function PostCard({ post, onEdit, onDelete }) {
               <span className="material-symbols-outlined">thumb_up</span>
               <span className="sr-only">Likes</span>
               <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-gray-900 bg-indigo-400 border-2 border-indigo-400 rounded-full -top-4 inset-e-4">
-                0
+               {post.likes}
               </div>
             </button>
           </figcaption>
@@ -102,7 +89,10 @@ function PostCard({ post, onEdit, onDelete }) {
             </span>
           ))}
         </div>
-
+          <hr />
+          <div>
+            {post.text}
+          </div>
       </div>
     </div>
   );
@@ -146,6 +136,8 @@ function Card() {
 
       const data = await response.json();
       setPostData(data.data);
+      console.log(data.data);
+      
       setTotal(data.total);
     } catch (err) {
       console.error("Failed to fetch posts:", err);
@@ -154,6 +146,33 @@ function Card() {
       setIsLoading(false);
     }
   }, [limit, page]); 
+
+  const editPost = useCallback(async (postId, updatedData) => {
+    // setIsLoading(true);
+    // setError(null);
+    try {
+      const response = await fetch(`${ENV.baseUrl}post/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "app-id": ENV.apiId
+        },
+        body: JSON.stringify(updatedData)
+      });
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const data = await response.json();
+      setPostData((prev) =>
+        prev.map((post) => (post.id === postId ? data : post))
+      );
+    //   setIsLoading(false);
+    //   setError(null);
+    } catch (err) {
+      console.error("Failed to edit post:", err);
+      setError("Failed to edit post. Please try again.");
+    }
+  }, []);
 
   useEffect(() => {
     fetchPosts();
@@ -292,17 +311,16 @@ function Card() {
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <div className="flex items-center justify-between p-4 md:p-5 border-b dark:border-gray-600">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Edit Post</h3>
-                <button
-                    type="button"
-                    onClick={() => closeModal("edit")}
-                    className="text-red-400 hover:bg-red-300 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-                >
-                    <span className="sr-only">Close modal</span>
-                </button>
                 </div>
                 <form key={selectedPost?.id} className="p-4 md:p-5" onSubmit={(e) => {
-                e.preventDefault();
-                // TODO: wire up PUT/PATCH API call, then fetchPosts()
+                e.preventDefault(); 
+                const formElement = e.target;
+                const editTextValue = formElement.querySelector('#editText').value;
+                editPost(selectedPost?.id, { 
+                    text: editTextValue, 
+                    image: selectedImage
+                });
+                // fetchPosts();
                 closeModal("edit");
                 }}>
                 <div className="grid gap-4 mb-4 grid-cols-2">
@@ -322,6 +340,13 @@ function Card() {
                 </div>
                 <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5">
                     Save
+                </button>
+                <button
+                    type="button"
+                    onClick={() => closeModal("edit")}
+                    className="text-gray-700 bg-white hover:bg-gray-100 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 mx-2"
+                >
+                    Cancel
                 </button>
                 </form>
             </div>

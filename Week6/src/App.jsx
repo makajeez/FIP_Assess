@@ -8,10 +8,13 @@ const ENV = {
   baseUrl: "https://dummyapi.io/data/v1/",
 };
 
-
+const myID = "69a55fb4f1426f4d6a24f079";
 
 
 function PostCard({ post, onEdit, onDelete }) {
+
+    
+
   return (
     <div className="hover:bg-gray-900 hover:text-white transition duration-300 max-w-sm rounded overflow-hidden shadow-lg">
       <div className="py-4 px-8">
@@ -102,7 +105,7 @@ function Card() {
   const [postData, setPostData]     = useState([]);
   const [total, setTotal]           = useState(0);
   const [page, setPage]             = useState(0);
-  const [limit]                     = useState(10);   // limit is fixed; no setter needed
+  const [limit]                     = useState(100);   // limit is fixed; no setter needed
   const [isLoading, setIsLoading]   = useState(false);
   const [error, setError]           = useState(null);
   const [selectedPost, setSelectedPost] = useState(null); // tracks which post is being edited/deleted
@@ -111,11 +114,10 @@ function Card() {
     add: false,
     edit: false,
     delete: false,
-    });
-
+  });
     const openModal  = (type, post = null) => {
-    setSelectedPost(post);
-    setModalState((prev) => ({ ...prev, [type]: true }));
+        setSelectedPost(post);
+        setModalState((prev) => ({ ...prev, [type]: true }));
     };
 
     const closeModal = (type) => {
@@ -136,7 +138,6 @@ function Card() {
 
       const data = await response.json();
       setPostData(data.data);
-      console.log(data.data);
       
       setTotal(data.total);
     } catch (err) {
@@ -146,6 +147,8 @@ function Card() {
       setIsLoading(false);
     }
   }, [limit, page]); 
+
+
 
   const editPost = useCallback(async (postId, updatedData) => {
     // setIsLoading(true);
@@ -173,6 +176,34 @@ function Card() {
       setError("Failed to edit post. Please try again.");
     }
   }, []);
+
+  const addPost = useCallback(async (newPostData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+        console.log(newPostData)
+      const response = await fetch(`${ENV.baseUrl}post/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "app-id": ENV.apiId
+        },
+        body: JSON.stringify({...newPostData, owner: myID, likes: 10, tags: ['soft', 'lift', 'bench']})
+      });
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const data = await response.json();
+      setPostData((prev) => [...prev, data]);
+    } catch (err) {
+      console.error("Failed to add post:", err);
+      setError("Failed to add post. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  
 
   useEffect(() => {
     fetchPosts();
@@ -370,7 +401,10 @@ function Card() {
                 </div>
                 <form className="p-4 md:p-5" onSubmit={(e) => {
                 e.preventDefault();
-                // TODO: wire up POST API call, then fetchPosts()
+                addPost({
+                    text: e.target.addText.value,
+                    image: selectedImage
+                });
                 closeModal("add");
                 }}>
                 <div className="grid gap-4 mb-4 grid-cols-2">

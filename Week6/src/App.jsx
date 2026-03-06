@@ -6,9 +6,9 @@ import { ImageGallery } from "./ImageGallery";
 const ENV = {
   apiId: "6597b9a018bdf6b554c5fdd8",
   baseUrl: "https://dummyapi.io/data/v1/",
+  userID: "69a55fb4f1426f4d6a24f079",
 };
 
-const myID = "69a55fb4f1426f4d6a24f079";
 
 
 function PostCard({ post, onEdit, onDelete }) {
@@ -105,7 +105,7 @@ function Card() {
   const [postData, setPostData]     = useState([]);
   const [total, setTotal]           = useState(0);
   const [page, setPage]             = useState(0);
-  const [limit]                     = useState(100);   // limit is fixed; no setter needed
+  const [limit]                     = useState(20);   // limit is fixed; no setter needed
   const [isLoading, setIsLoading]   = useState(false);
   const [error, setError]           = useState(null);
   const [selectedPost, setSelectedPost] = useState(null); // tracks which post is being edited/deleted
@@ -181,14 +181,13 @@ function Card() {
     setIsLoading(true);
     setError(null);
     try {
-        console.log(newPostData)
-      const response = await fetch(`${ENV.baseUrl}post/create`, {
+        const response = await fetch(`${ENV.baseUrl}post/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "app-id": ENV.apiId
         },
-        body: JSON.stringify({...newPostData, owner: myID, likes: 10, tags: ['soft', 'lift', 'bench']})
+        body: JSON.stringify({...newPostData, owner: ENV.userID, likes: 10, tags: ['soft', 'lift', 'bench']})
       });
 
       if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -203,6 +202,18 @@ function Card() {
     }
   }, []);
 
+  const deletePost = async () => {
+    try {
+      await fetch(`${ENV.baseUrl}post/${selectedPost.id}`, {
+        method: "DELETE",
+        headers: { "app-id": ENV.apiId },
+      });
+      fetchPosts();
+      closeModal("delete");
+    } catch (err) {
+      setError("Failed to delete post.", err);
+    }
+  };
   
 
   useEffect(() => {
@@ -316,7 +327,7 @@ function Card() {
                 <button
                     type="button"
                     onClick={() => {
-                    // TODO: wire up DELETE API call, then fetchPosts()
+                    deletePost();
                     closeModal("delete");
                     }}
                     className="text-white bg-red-600 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2"

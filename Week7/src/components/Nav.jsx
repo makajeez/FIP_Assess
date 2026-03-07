@@ -19,12 +19,12 @@ export function Nav() {
           </svg>
         </button>
       </div>
-      <div className="hidden xl:flex lg:gap-x-12">
+      {/* <div className="hidden xl:flex lg:gap-x-12">
         <a href="#" className=" text-lg font-semibold leading-6 text-gray-900">Home</a>
         <a href="#" className="text-lg font-semibold leading-6 text-gray-900">Blog Post</a>
         <a href="#" className="text-lg font-semibold leading-6 text-gray-900">Company</a>
 
-      </div>    
+      </div>     */}
       
       <form className="ml-10 flex items-center lg:flex lg:flex-1 lg:justify-end">   
         <label htmlFor="simple-search" className="sr-only">Search</label>

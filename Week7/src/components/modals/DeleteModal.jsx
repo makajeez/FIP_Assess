@@ -1,9 +1,5 @@
 import { usePost } from "../../context/PostContext";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DELETE MODAL
-// Conditionally rendered — returns null when modalState.delete is false
-// ─────────────────────────────────────────────────────────────────────────────
 export function DeleteModal() {
   const { modalState, closeModal, deletePost, selectedPost } = usePost();
 
@@ -20,7 +16,6 @@ export function DeleteModal() {
             <h3 className="mb-2 text-lg font-normal text-gray-500 dark:text-gray-400">
               Are you sure you want to delete this post?
             </h3>
-            {/* Preview snippet of the post being deleted */}
             {selectedPost && (
               <p className="mb-5 text-sm text-gray-400 italic truncate">
                 "{selectedPost.text?.slice(0, 60)}..."

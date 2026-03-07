@@ -1,9 +1,5 @@
 import { usePost } from "../context/PostContext";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// POST CARD COMPONENT
-// Calls openModal() directly from context — no prop drilling needed
-// ─────────────────────────────────────────────────────────────────────────────
 export function PostCard({ post }) {
   const { openModal } = usePost();
 
@@ -11,7 +7,6 @@ export function PostCard({ post }) {
     <div className="hover:bg-gray-900 hover:text-white transition duration-300 max-w-sm rounded overflow-hidden shadow-lg">
       <div className="py-4 px-8">
 
-        {/* Author info + action buttons */}
         <div className="flex items-start gap-2 mb-3">
           <img
             src={post.owner.picture}
@@ -62,9 +57,8 @@ export function PostCard({ post }) {
             >
               <span className="material-symbols-outlined">thumb_up</span>
               <span className="sr-only">Likes</span>
-              {/* Likes count placeholder — wire to API when available */}
               <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-gray-900 bg-indigo-400 border-2 border-indigo-400 rounded-full -top-4 -right-2">
-                0
+               {post.likes}
               </div>
             </button>
           </figcaption>

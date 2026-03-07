@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback, createContext, useContext } from "rea
 import { ENV } from "../constants";
 import { useDebounce } from "../hooks/useDebounce";
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // CONTEXT CREATION
-// ─────────────────────────────────────────────────────────────────────────────
 const PostContext = createContext(null);
 
 
@@ -14,32 +13,31 @@ export function usePost() {
   if (!context) throw new Error("usePost must be used within a PostProvider");
   return context;
 }
-// ─────────────────────────────────────────────────────────────────────────────
+
 // PROVIDER
-// ─────────────────────────────────────────────────────────────────────────────
 export function PostProvider({ children }) {
-  // ── Post data state ─────────────────────────────────────────────────────────
-  const [postData, setPostData]           = useState([]);
-  const [total, setTotal]                 = useState(0);
-  const [page, setPage]                   = useState(0);
-  const [limit]                           = useState(10);
-  const [isLoading, setIsLoading]         = useState(false);
-  const [error, setError]                 = useState(null)
+  
+  const [postData, setPostData] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(0);
+  const [limit] = useState(10);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [authd, setAuthd] = useState(false);
   const [user, setUser] = useState(null);
 
-  // ── Modal + selection state ─────────────────────────────────────────────────
-  const [selectedPost, setSelectedPost]   = useState(null);
+  // Modal & selection state 
+  const [selectedPost, setSelectedPost] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
-  const [modalState, setModalState]       = useState({
+  const [modalState, setModalState] = useState({
     add: false, edit: false, delete: false,
   });
 
-  // ── Search state ────────────────────────────────────────────────────────────
-  const [searchQuery, setSearchQuery]     = useState("");
-  const debouncedQuery                    = useDebounce(searchQuery, 300);
+  // Search state 
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedQuery = useDebounce(searchQuery, 300);
 
-  // ── Modal helpers ───────────────────────────────────────────────────────────
+  // Modal helpers
   const openModal = (type, post = null) => {
     setSelectedPost(post);
     setSelectedImage(post?.image || "");
@@ -52,7 +50,8 @@ export function PostProvider({ children }) {
     setSelectedImage("");
   };
 
-  // ── Fetch posts ─────────────────────────────────────────────────────────────
+  // API actions.
+
   const fetchPosts = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -76,18 +75,30 @@ export function PostProvider({ children }) {
     fetchPosts();
   }, [fetchPosts]);
 
-  // ── API actions ─────────────────────────────────────────────────────────────
   const addPost = async (newPost) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      await fetch(`${ENV.baseUrl}post`, {
+        const response = await fetch(`${ENV.baseUrl}post/create`, {
         method: "POST",
-        headers: { "app-id": ENV.apiId, "Content-Type": "application/json" },
-        body: JSON.stringify(newPost),
+        headers: {
+          "Content-Type": "application/json",
+          "app-id": ENV.apiId
+        },
+        body: JSON.stringify({...newPost, owner: ENV.userID, likes: 10, tags: ['soft', 'lift', 'bench']})
       });
-      fetchPosts();
+
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+      const data = await response.json();
+      setPostData((prev) => [data, ...prev]);
+    } catch (err) {
+      console.error("Failed to add post:", err);
+      setError("Failed to add post. Please try again.");
+    } finally {
+      setIsLoading(false);
       closeModal("add");
-    } catch {
-      setError("Failed to add post.");
+      fetchPosts();
     }
   };
 
@@ -118,24 +129,24 @@ export function PostProvider({ children }) {
     }
   };
 
-  // ── Derived: client-side filtered posts ────────────────────────────────────
-  const filteredPosts = debouncedQuery.trim() === ""
-    ? postData
-    : postData.filter((post) => {
-        const query    = debouncedQuery.toLowerCase();
-        const fullName = `${post.owner.firstName} ${post.owner.lastName}`.toLowerCase();
-        const tags     = post.tags.join(" ").toLowerCase();
-        return fullName.includes(query) || tags.includes(query);
+
+  // client-side filtered posts based on debounced search query
+  const filteredPosts = debouncedQuery.trim() === "" ? postData : postData.filter((post) => {
+      const query = debouncedQuery.toLowerCase();
+      const fullName = `${post.owner.firstName} ${post.owner.lastName}`.toLowerCase();
+      const tags = post.tags.join(" ").toLowerCase();
+      const text = post.text.toLowerCase();
+        return fullName.includes(query) || tags.includes(query) || text.includes(query);
       });
 
-  // ── Pagination helpers ──────────────────────────────────────────────────────
+  // Pagination helpers 
   const totalPages = Math.ceil(total / limit);
-  const canGoPrev  = page > 0;
-  const canGoNext  = page < totalPages - 1;
+  const canGoPrev = page > 0;
+  const canGoNext = page < totalPages - 1;
   const handlePrev = () => { if (canGoPrev) setPage((p) => p - 1); };
   const handleNext = () => { if (canGoNext) setPage((p) => p + 1); };
 
-  // ── Context value ───────────────────────────────────────────────────────────
+  // Context value 
   const value = {
     authd, setAuthd, user, setUser,
     postData, filteredPosts, total, page, limit, isLoading, error,

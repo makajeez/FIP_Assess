@@ -6,7 +6,7 @@ import { ImageGallery } from "./ImageGallery";
 const ENV = {
   apiId: "6597b9a018bdf6b554c5fdd8",
   baseUrl: "https://dummyapi.io/data/v1/",
-  userID: "69a55fb4f1426f4d6a24f079",
+  userID: "",
 };
 
 

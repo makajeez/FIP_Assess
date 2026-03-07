@@ -1,12 +1,8 @@
 import { usePost } from "../../context/PostContext";
 import { ImageGallery } from "../ImageGallery";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EDIT MODAL
-// Conditionally rendered — returns null when modalState.edit is false
-// key={selectedPost?.id} on the form forces a remount when the selected
-// post changes, ensuring defaultValue always reflects the correct post
-// ─────────────────────────────────────────────────────────────────────────────
+
+
 export function EditModal() {
   const {
     modalState,

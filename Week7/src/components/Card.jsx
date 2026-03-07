@@ -24,8 +24,6 @@ export function Card() {
   return (
     <div>
       <div className="mx-auto 2xl:px-40 xl:px-20 px-8 py-20">
-
-        {/* ── Toolbar: Add Post ── */}
         <div className="inline-flex">
           <div className="tooltip items-center me-4">
             <button
@@ -66,7 +64,7 @@ export function Card() {
 
             <hr className="my-10" />
 
-            {/* ── Pagination — hidden during active search (filtering is client-side) ── */}
+            {/* ── Pagination — hidden during active search (dummyAPI doesn't support what we nedd, so filtering is client side) ── */}
             {!debouncedQuery && (
               <div className="flex flex-col items-center">
                 <span className="text-sm text-gray-700 dark:text-gray-400">
@@ -114,9 +112,9 @@ export function Card() {
         )}
 
         {/* ── Modals — each self-manages its own visibility via context ── */}
-        <DeleteModal />
-        <EditModal />
         <AddModal />
+        <EditModal />
+        <DeleteModal />
 
       </div>
     </div>

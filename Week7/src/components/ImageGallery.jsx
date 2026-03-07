@@ -1,9 +1,5 @@
 import { GALLERY_IMAGES } from "../constants";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// IMAGE GALLERY COMPONENT
-// Reusable across AddModal and EditModal
-// ─────────────────────────────────────────────────────────────────────────────
 export function ImageGallery({ onSelect, selectedImage }) {
   return (
     <div>

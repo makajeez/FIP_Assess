@@ -1,10 +1,6 @@
 import { usePost } from "../../context/PostContext";
 import { ImageGallery } from "../ImageGallery";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ADD MODAL
-// Conditionally rendered — returns null when modalState.add is false
-// ─────────────────────────────────────────────────────────────────────────────
 export function AddModal() {
   const {
     modalState,
@@ -30,7 +26,6 @@ export function AddModal() {
       <div className="relative p-4 w-full max-w-md">
         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
 
-          {/* Header */}
           <div className="flex items-center justify-between p-4 md:p-5 border-b dark:border-gray-600">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Create New Post</h3>
             <button
@@ -64,7 +59,6 @@ export function AddModal() {
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Selected Image
                 </label>
-                {/* Read-only field reflects gallery selection */}
                 <input
                   type="text"
                   value={selectedImage}

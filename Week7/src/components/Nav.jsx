@@ -1,4 +1,5 @@
 import { usePost } from "../context/PostContext";
+import Button from '@mui/material/Button'; 
 
 export function Nav() {
   const { authd, setAuthd, user, setUser, searchQuery, setSearchQuery, filteredPosts, total, debouncedQuery } = usePost();
@@ -54,9 +55,11 @@ export function Nav() {
 
       <div className="hidden lg:flex lg:flex-1 lg:justify-end">
         {!authd ?
-        <a href="#" className="text-lg font-semibold leading-6 text-gray-900" onClick={() => { setAuthd(true); setUser("User"); }}>Log in <span aria-hidden="true">→</span></a>
+        // <a href="#" className="text-lg font-semibold leading-6 text-gray-900" onClick={() => { setAuthd(true); setUser("User"); }}>Log in <span aria-hidden="true">→</span></a>
+        <Button variant="text" className="text-lg font-semibold leading-6 text-gray-900"  onClick={() => { setAuthd(true); setUser("User"); }}>Hello world</Button>
        :
-        <a href="#" className="text-lg font-semibold leading-6 text-gray-900">Welcome {user}</a>
+        // <a href="#" className="text-lg font-semibold leading-6 text-gray-900">Welcome {user}</a>
+        <Button  onClick={() => { setAuthd(false); setUser(""); }}>Welcome {user}</Button>
         }
       </div>
     </nav>

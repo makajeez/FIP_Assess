@@ -3,6 +3,10 @@ import { PostCard } from "./PostCard";
 import { DeleteModal } from "./modals/DeleteModal";
 import { EditModal } from "./modals/EditModal";
 import { AddModal } from "./modals/AddModal";
+import { Button, Fab, Tooltip } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 export function Card() {
   const {
@@ -22,19 +26,19 @@ export function Card() {
   } = usePost();
 
  return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen dark:bg-gray-950 light:bg-white">  
       <div className="mx-auto 2xl:px-40 xl:px-20 px-8 py-20">
         <div className="inline-flex">
-          <div className="tooltip items-center me-4">
-            <button
-              type="button"
+          <Tooltip title="Add new post">
+            <Fab
+              color="primary"
+              size="medium"
               onClick={() => openModal("add")}
-              className="flex justify-center items-center w-12 h-12 text-white bg-indigo-600 rounded-full border border-indigo-900 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 focus:outline-none transition-colors"
               aria-label="Add new post"
             >
-              <span className="material-symbols-outlined">add</span>
-            </button>
-          </div>
+              <AddIcon />
+            </Fab>
+          </Tooltip>
         </div>
 
         <hr className="my-10 border-gray-200 dark:border-gray-700" />
@@ -74,26 +78,29 @@ export function Card() {
                   <span className="font-semibold text-gray-900 dark:text-white">{total}</span> Entries
                 </span>
                 <div className="inline-flex mt-2">
-                  <button
+                  <Button
                     onClick={handlePrev}
                     disabled={!canGoPrev}
-                    className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 dark:bg-gray-700 rounded-s hover:bg-gray-900 dark:hover:bg-gray-600 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="contained"
+                    color="inherit"
+                    size="small"
+                    startIcon={<NavigateBeforeIcon />}
+                    disableElevation
                   >
-                    <svg className="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 5H1m0 0 4 4M1 5l4-4" />
-                    </svg>
                     Prev
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={handleNext}
                     disabled={!canGoNext}
-                    className="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 dark:bg-gray-700 border-s border-gray-700 dark:border-gray-600 rounded-e hover:bg-gray-900 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    variant="contained"
+                    color="inherit"
+                    size="small"
+                    endIcon={<NavigateNextIcon />}
+                    disableElevation
+                    sx={{ ml: 1 }}
                   >
                     Next
-                    <svg className="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-                    </svg>
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}

@@ -56,6 +56,9 @@ export function PostProvider({ children }) {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebounce(searchQuery, 300);
 
+  // selected view to display i.e  Datails page
+  const [selectedViewPost, setSelectedViewPost] = useState(null);
+
   // Modal helpers
   const openModal = (type, post = null) => {
     setSelectedPost(post);
@@ -174,6 +177,7 @@ export function PostProvider({ children }) {
     fetchPosts, addPost, editPost, deletePost,
     searchQuery, setSearchQuery, debouncedQuery,
     canGoPrev, canGoNext, handlePrev, handleNext,
+    selectedViewPost, setSelectedViewPost
   };
 
   return (

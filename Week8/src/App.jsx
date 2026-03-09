@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import { PostProvider, usePost } from "./context/PostContext";
 import { Nav } from "./components/Nav";
 import { Card } from "./components/Card";
+import { PostDetails } from "./components/PostDetails";
 
 
 function MuiThemeWrapper({ children }) {
@@ -36,7 +38,10 @@ export default function App() {
     <PostProvider>
       <MuiThemeWrapper>
         <Nav />
-        <Card />
+        <Routes>
+          <Route path="/" element={<Card />} />
+          <Route path="/post/:id" element={<PostDetails />} />
+        </Routes>
       </MuiThemeWrapper>
     </PostProvider>
   );

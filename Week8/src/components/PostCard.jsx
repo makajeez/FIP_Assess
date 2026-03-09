@@ -7,9 +7,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { usePost } from "../context/PostContext";
+import { useNavigate } from "react-router-dom";
 
 export function PostCard({ post }) {
-  const { openModal } = usePost();
+  const { openModal, setSelectedViewPost } = usePost();
+
+  const navigate = useNavigate();
+
+  const handleViewPost = () => {
+    setSelectedViewPost(post);
+    navigate(`/post/${post.id}`);
+  };
 
   return (
     <Card
@@ -27,7 +35,7 @@ export function PostCard({ post }) {
         <div className="flex items-start gap-2 mb-3">
           <Avatar
             src={post.owner.picture}
-            alt={`${post.owner.firstName}${post}tar`}
+            alt={`${post.owner.firstName}${post.owner.lastName}'s Avatar`}
             sx={{ width: 48, height: 48 }}
           />
           <div className="flex-1 min-w-0">
@@ -66,18 +74,16 @@ export function PostCard({ post }) {
 
       </CardContent>
 
-      {/* Post image */}
-      <div className="relative">
-        <CardMedia
-          component="img"
-          height="240"
-          image={post.image}
-          alt="Post cover"
-          sx={{ height: 240, objectFit: "cover" }}
-        />
-        {/* Likes badge overlaid on image */}
-        <div className="absolute bottom-2 left-4">
-          <Tooltip title="Likes">
+      <Tooltip title="View post details" placement="top">
+        <div className="relative cursor-pointer" onClick={handleViewPost}>
+          <CardMedia
+            component="img"
+            image={post.image}
+            alt="Post cover"
+            sx={{ height: 240, objectFit: "cover" }}
+          />
+          {/* Likes badge */}
+          <div className="absolute bottom-2 left-4">
             <Chip
               icon={<ThumbUpIcon fontSize="small" />}
               label={post.likes ?? 0}
@@ -85,9 +91,11 @@ export function PostCard({ post }) {
               color="primary"
               sx={{ fontWeight: 700 }}
             />
-          </Tooltip>
+          </div>
         </div>
-      </div>
+      </Tooltip>
+
+    
 
       {/* Tags */}
       <CardContent sx={{ pt: 1.5, pb: "12px !important" }}>

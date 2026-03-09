@@ -30,7 +30,7 @@ export function PostDetails() {
   // show a graceful fallback rather than crashing
   if (!selectedViewPost) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <Typography color="text.secondary">Post not found or still loading.</Typography>
         <Button
           startIcon={<ArrowBackIcon />}
@@ -47,7 +47,7 @@ export function PostDetails() {
   const post = selectedViewPost;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen">
       <div className="mx-auto 2xl:px-40 xl:px-20 px-8 py-12 max-w-4xl">
 
         {/* ── Back button ── */}

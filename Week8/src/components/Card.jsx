@@ -26,7 +26,7 @@ export function Card() {
   } = usePost();
 
  return (
-    <div className="min-h-screen dark:bg-gray-950 light:bg-white">  
+    <div className="min-h-screen">  
       <div className="mx-auto 2xl:px-40 xl:px-20 px-8 py-20">
         <div className="inline-flex">
           <Tooltip title="Add new post">
